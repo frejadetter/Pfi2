@@ -1,44 +1,46 @@
+import java.awt.BorderLayout;
+import java.util.Calendar;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
+import javax.swing.JTextArea;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DigitalClockGUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField HoursField;
-	private JTextField MinuteFiled;
-	private JLabel LabelTime;
+	JTextField textFieldHours;
+	JTextField textFieldMinutes;
 	private ClockLogic clockLogic;
-
-	public void setTimeOnLabel(String time){
-		
-		LabelTime.setText(time);
-		
-		}
-
-
-	public void ShowAlarm (){
-		
-	}
-
-
-	public void ActivateAlarm(){
-		
-	}
+	private JLabel labelTime;
+	private JLabel labelAlarm;
+	private JLabel labelAlarmTime;
+	private JLabel lblTimeIs;
 
 	
+public void setTimeOnLabel(String time){
+	labelTime.setText(time);
+}
 
-	/**
-	 * Launch the application.
-	 */
+
+	public void activateAlarm(boolean activate){
+		if(activate == true){
+			labelAlarmTime.setText("Alarm!!");
+		
+		}
+		
+	}
+	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -57,54 +59,86 @@ public class DigitalClockGUI extends JFrame {
 	 */
 	public DigitalClockGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 373, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+	
 		
-		LabelTime = new JLabel("");
-		LabelTime.setHorizontalAlignment(SwingConstants.CENTER);
-		LabelTime.setFont(new Font("Avenir", Font.PLAIN, 16));
-		LabelTime.setBounds(241, 17, 183, 86);
-		contentPane.add(LabelTime);
+		JLabel lblHour = new JLabel("HOUR");
+		lblHour.setBounds(37, 184, 61, 16);
+		contentPane.add(lblHour);
 		
-		JLabel Alarm = new JLabel("Alarm");
-		Alarm.setFont(new Font("Avenir", Font.PLAIN, 16));
-		Alarm.setHorizontalAlignment(SwingConstants.CENTER);
-		Alarm.setBounds(241, 124, 183, 75);
-		contentPane.add(Alarm);
-		
-		HoursField = new JTextField();
-		HoursField.setBounds(132, 64, 87, 40);
-		contentPane.add(HoursField);
-		HoursField.setColumns(10);
-		
-		MinuteFiled = new JTextField();
-		MinuteFiled.setColumns(10);
-		MinuteFiled.setBounds(132, 124, 87, 40);
-		contentPane.add(MinuteFiled);
-		
-		JLabel lblHours = new JLabel("HOURS");
-		lblHours.setFont(new Font("Avenir", Font.PLAIN, 15));
-		lblHours.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblHours.setBounds(43, 64, 77, 40);
-		contentPane.add(lblHours);
+		textFieldHours = new JTextField();
+		textFieldHours.setBounds(84, 179, 68, 26);
+		contentPane.add(textFieldHours);
+		textFieldHours.setColumns(10);
 		
 		JLabel lblMinutes = new JLabel("MINUTES");
-		lblMinutes.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblMinutes.setFont(new Font("Avenir", Font.PLAIN, 15));
-		lblMinutes.setBounds(43, 124, 77, 40);
+		lblMinutes.setBounds(171, 184, 61, 16);
 		contentPane.add(lblMinutes);
 		
-		JButton SetAlarm = new JButton("SET ALARM");
-		SetAlarm.setFont(new Font("Avenir", Font.BOLD, 15));
-		SetAlarm.setBounds(43, 203, 101, 52);
-		contentPane.add(SetAlarm);
+		textFieldMinutes = new JTextField();
+		textFieldMinutes.setBounds(244, 179, 75, 26);
+		contentPane.add(textFieldMinutes);
+		textFieldMinutes.setColumns(10);
 		
-		JButton ClearAlarm = new JButton("CLEAR ALARM");
-		ClearAlarm.setFont(new Font("Avenir", Font.BOLD, 13));
-		ClearAlarm.setBounds(165, 203, 101, 52);
-		contentPane.add(ClearAlarm);
+		JButton btnSetAlarm = new JButton("SET ALARM");
+		btnSetAlarm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String hourString = textFieldHours.getText();
+				String minuteString = textFieldMinutes.getText();
+				
+				int hour = Integer.parseInt(hourString);
+			    int minute = Integer.parseInt(minuteString);
+			    
+				clockLogic.setAlarm(hour, minute);
+				
+				labelAlarmTime.setText(hourString + " : " + minuteString);
+				
+			
+			}
+		});
+		btnSetAlarm.setBounds(47, 219, 117, 29);
+		contentPane.add(btnSetAlarm);
+		
+		JButton btnClearAlarm = new JButton("CLEAR ALARM");
+		btnClearAlarm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				labelAlarmTime.setText(" ");
+				clockLogic.clearAlarm();
+				
+			}
+		});
+		btnClearAlarm.setBounds(192, 219, 117, 29);
+		contentPane.add(btnClearAlarm);
+		
+		
+		labelAlarm = new JLabel("ALARM AT");
+		labelAlarm.setBounds(37, 100, 75, 16);
+		contentPane.add(labelAlarm);
+		
+		labelTime = new JLabel("");
+		labelTime.setFont(new Font("Avenir", Font.PLAIN, 25));
+		labelTime.setBounds(37, 23, 294, 69);
+		contentPane.add(labelTime);
+		
+		labelAlarmTime = new JLabel("");
+		labelAlarmTime.setBounds(37, 122, 154, 45);
+		contentPane.add(labelAlarmTime);
+		
+		lblTimeIs = new JLabel("Time is");
+		lblTimeIs.setBounds(37, 6, 61, 16);
+		contentPane.add(lblTimeIs);
+		
+		clockLogic = new ClockLogic(this);
+		
+		
 	}
+	
+	
+	
 }
